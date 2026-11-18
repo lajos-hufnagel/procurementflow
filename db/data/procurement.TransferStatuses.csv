@@ -1,0 +1,6 @@
+code,name
+Pending,Übertragung ausstehend
+Processing,Wird übertragen
+Retry,Erneuter Versuch geplant
+Succeeded,Bestellung bestätigt
+Failed,Übertragung fehlgeschlagen

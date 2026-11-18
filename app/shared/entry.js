@@ -1,0 +1,10 @@
+"use strict";
+const target = new URL("/cockpit/webapp/index.html", location.origin);
+target.search = location.search;
+target.hash = location.hash;
+const lang = target.searchParams.get("sap-ui-language") === "en" ? "en" : "de";
+document.documentElement.lang = lang;
+const link = document.getElementById("open-app");
+link.href = target.href;
+link.textContent = lang === "en" ? "Open ProcurementFlow" : "ProcurementFlow öffnen";
+location.replace(target.href);

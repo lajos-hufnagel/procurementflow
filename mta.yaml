@@ -1,0 +1,166 @@
+_schema-version: '3.3.0'
+ID: procurementflow
+version: 0.1.0
+parameters:
+  hana-database-id: REPLACE_WITH_EXISTING_HANA_GUID
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npm ci --prefix erp
+        - npm run build
+modules:
+  - name: pf-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 256M
+    build-parameters:
+      builder: npm-ci
+      ignore: [node_modules/]
+    requires: [{name: pf-db}]
+  - name: pf-erp-db-deployer
+    type: hdb
+    path: gen/erp-db
+    deployed-after: [pf-db-deployer]
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 256M
+    build-parameters:
+      builder: npm-ci
+      ignore: [node_modules/]
+    requires: [{name: pf-erp-db}]
+  - name: pf-erp
+    type: nodejs
+    path: gen/erp
+    deployed-after: [pf-erp-db-deployer]
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 256M
+      instances: 1
+      health-check-type: http
+      health-check-http-endpoint: /health
+    properties:
+      NODE_ENV: production
+    build-parameters:
+      builder: npm-ci
+      ignore: [node_modules/]
+    requires: [{name: pf-erp-db}, {name: pf-erp-auth}]
+    provides:
+      - name: erp-api
+        properties: {url: '${default-url}'}
+  - name: pf-erp-destination-content
+    type: com.sap.application.content
+    deployed-after: [pf-erp]
+    build-parameters: {no-source: true}
+    requires:
+      - name: erp-api
+      - name: pf-destination
+        parameters: {content-target: true}
+      - name: pf-erp-auth
+        parameters:
+          service-key: {name: pf-erp-destination-key}
+    parameters:
+      content:
+        instance:
+          existing_destinations_policy: update
+          destinations:
+            - Name: pf-erp-cloud
+              URL: '~{erp-api/url}'
+              Authentication: OAuth2ClientCredentials
+              TokenServiceInstanceName: pf-erp-auth
+              TokenServiceKeyName: pf-erp-destination-key
+  - name: pf-srv
+    type: nodejs
+    path: gen/srv
+    deployed-after: [pf-erp-destination-content]
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 512M
+      instances: 1
+      health-check-type: http
+      health-check-http-endpoint: /health
+    build-parameters:
+      builder: npm-ci
+      ignore: [node_modules/]
+    properties:
+      NODE_ENV: production
+      CDS_ENV: ''
+      PUBLIC_DEMO_ORIGIN: ''
+      ERP_WORKER_ENABLED: 'true'
+      ERP_TRANSPORT: destination
+      ERP_DESTINATION: pf-erp-cloud
+    requires:
+      - name: pf-db
+      - name: pf-auth
+      - name: pf-destination
+      - name: pf-connectivity
+    provides:
+      - name: srv-api
+        properties: {url: '${default-url}'}
+  - name: pf-router
+    type: approuter.nodejs
+    path: gen/approuter
+    deployed-after: [pf-srv]
+    properties:
+      NODE_ENV: production
+      PUBLIC_DEMO: 'false'
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 256M
+      instances: 1
+    build-parameters:
+      builder: npm-ci
+      ignore: [node_modules/]
+    requires:
+      - name: pf-auth
+      - name: srv-api
+        group: destinations
+        properties: {name: srv-api, url: '~{url}', forwardAuthToken: true}
+    provides:
+      - name: app-api
+        properties: {uri: '${default-uri}'}
+resources:
+  - name: pf-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+      config: {database_id: '${hana-database-id}'}
+  - name: pf-erp-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+      config: {database_id: '${hana-database-id}'}
+  - name: pf-auth
+    type: org.cloudfoundry.managed-service
+    requires: [{name: app-api}]
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: procurementflow-${org}-${space}
+        tenant-mode: dedicated
+        oauth2-configuration:
+          credential-types: [binding-secret]
+          redirect-uris: ['https://~{app-api/uri}/**']
+  - name: pf-erp-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-name: pf-erp-auth
+      service-plan: application
+      path: ./erp/xs-security.json
+      config:
+        xsappname: procurementflow-erp-${org}-${space}
+        tenant-mode: dedicated
+  - name: pf-destination
+    type: org.cloudfoundry.existing-service
+    parameters: {service-name: pf-destination}
+  - name: pf-connectivity
+    type: org.cloudfoundry.existing-service
+    parameters: {service-name: pf-connectivity}

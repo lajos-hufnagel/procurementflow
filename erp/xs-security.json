@@ -1,0 +1,8 @@
+{
+  "xsappname": "procurementflow-erp",
+  "tenant-mode": "dedicated",
+  "scopes": [{ "name": "$XSAPPNAME.Integration", "description": "Create and read ERP demo orders" }],
+  "authorities": ["$XSAPPNAME.Integration"],
+  "role-templates": [],
+  "oauth2-configuration": { "credential-types": ["binding-secret"] }
+}

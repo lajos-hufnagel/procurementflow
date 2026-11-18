@@ -1,0 +1,15 @@
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { cp, rm, readFile, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+const { stdout, stderr } = await promisify(execFile)('npm', ['run', 'build'], { cwd: resolve('erp'), maxBuffer: 4 * 1024 * 1024 });
+if (stderr) process.stderr.write(stderr);
+if (stdout) process.stdout.write(stdout);
+await rm('gen/erp', { recursive: true, force: true });
+await rm('gen/erp-db', { recursive: true, force: true });
+await cp('erp/gen/srv', 'gen/erp', { recursive: true });
+await cp('erp/gen/db', 'gen/erp-db', { recursive: true });
+const runtime = JSON.parse(await readFile('gen/erp/package.json', 'utf8'));
+runtime.scripts = { start: 'cds-serve' };
+await writeFile('gen/erp/package.json', JSON.stringify(runtime, null, 2) + '\n');
+console.log('ERP-Runtime und eigenes HANA-Deployment erzeugt: gen/erp und gen/erp-db');

@@ -1,0 +1,3 @@
+cf_org_id      = "REPLACE_WITH_CF_ORG_GUID"
+cf_operator_id = "REPLACE_WITH_CF_USER_GUID"
+space_name     = "procurementflow"

@@ -1,0 +1,18 @@
+_schema-version: '3.3.0'
+ID: procurementflow-public-demo
+extends: procurementflow-trial
+modules:
+  - name: pf-srv
+    properties:
+      CDS_ENV: public-demo
+      PUBLIC_DEMO_ORIGIN: https://${org}-${space}-pf-router.${default-domain}
+  - name: pf-router
+    properties:
+      PUBLIC_DEMO: 'true'
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: '~{url}'
+          forwardAuthToken: false

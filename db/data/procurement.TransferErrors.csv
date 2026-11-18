@@ -1,0 +1,16 @@
+code;name
+ERP_UNAVAILABLE;ERP-Testdienst vorübergehend nicht verfügbar.
+ERP_CONNECTION;Verbindung zum ERP-Testdienst unterbrochen.
+ERP_TIMEOUT;Der ERP-Testdienst hat nicht rechtzeitig geantwortet.
+ERP_AUTH;Der technische ERP-Zugang wurde abgelehnt.
+ERP_CONFLICT;Die ERP-Bestellung widerspricht den gespeicherten Konditionen.
+ERP_REJECTED;Der ERP-Testdienst hat den Auftrag abgelehnt.
+INVALID_CONFIRMATION;Die ERP-Bestätigung passt nicht zum Auftrag.
+PAYLOAD_CORRUPTED;Die gespeicherten Bestelldaten sind widersprüchlich.
+CASE_CHANGED;Der freigegebene Fall passt nicht mehr zum Übertragungsauftrag.
+LEASE_EXPIRED;Ein vorheriger Versuch wurde nicht abgeschlossen.
+INTERNAL_TRANSFER_ERROR;Die Übertragung konnte nicht abgeschlossen werden.
+ERP_DESTINATION_MISSING;Das konfigurierte ERP-Ziel wurde nicht gefunden.
+ERP_DESTINATION_INVALID;Das konfigurierte ERP-Ziel hat eine ungültige Adresse.
+ERP_DESTINATION_UNAVAILABLE;Das konfigurierte ERP-Ziel konnte nicht aufgelöst werden.
+ERP_DEMO_OUTAGE;Demo-Simulation: ERP nicht erreichbar.

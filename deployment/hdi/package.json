@@ -1,0 +1,12 @@
+{
+  "name": "procurementflow-hdi-deployer",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": { "node": "24.x" },
+  "packageManager": "npm@11.20.0",
+  "scripts": {
+    "start": "node node_modules/@sap/hdi-deploy/deploy.js --use-hdb --parameter com.sap.hana.di.table/try_fast_table_migration=true"
+  },
+  "dependencies": { "@sap/hdi-deploy": "5.7.0", "hdb": "2.30.1" }
+}

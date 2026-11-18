@@ -1,0 +1,98 @@
+<mvc:View controllerName="procurementflow.cockpit.controller.Main" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:core="sap.ui.core" xmlns:unified="sap.ui.unified" xmlns:grid="sap.ui.layout.cssgrid" displayBlock="true" height="100%">
+  <f:DynamicPage id="cockpit" class="pf-cockpit sapUiResponsiveContentPadding" headerExpanded="true" toggleHeaderOnTitleClick="false" fitContent="false">
+    <f:title><f:DynamicPageTitle>
+      <f:heading><VBox><Title text="{i18n>heading}" level="H1"/><Text text="{i18n>intro}" class="pf-subtitle"/></VBox></f:heading>
+      <f:actions><Button text="{i18n>refresh}" icon="sap-icon://refresh" press=".refresh" enabled="{= !${ui>/busy} }"/></f:actions>
+      <f:expandedContent><ObjectStatus text="{parts: ['i18n>evaluationDate', 'ui>/evaluationDate'], formatter: '.evaluationLabel'}" icon="sap-icon://calendar" class="sapUiTinyMarginTop"/></f:expandedContent>
+    </f:DynamicPageTitle></f:title>
+    <f:content><VBox class="pf-content" busy="{ui>/busy}" busyIndicatorDelay="0">
+      <MessageStrip text="{ui>/error}" type="Error" showIcon="true" visible="{= !!${ui>/error} }" class="sapUiSmallMarginBottom"/>
+      <FlexBox wrap="Wrap" class="pf-kpis">
+        <GenericTile header="{i18n>openCases}" subheader="{i18n>openHint}" frameType="OneByHalf" press=".onTile"><customData><core:CustomData key="filter" value="Open"/></customData><tileContent><TileContent><content><NumericContent value="{ui>/summary/open}" withMargin="false" valueColor="Neutral"/></content></TileContent></tileContent></GenericTile>
+        <GenericTile header="{i18n>urgentCases}" subheader="{parts: ['i18n>urgentHint', 'ui>/summary/urgentUntil'], formatter: '.urgentLabel'}" frameType="OneByHalf" press=".onTile"><customData><core:CustomData key="filter" value="urgent"/></customData><tileContent><TileContent><content><NumericContent value="{ui>/summary/urgent}" withMargin="false" valueColor="Critical"/></content></TileContent></tileContent></GenericTile>
+        <GenericTile header="{i18n>waitingCases}" subheader="{i18n>waitingHint}" frameType="OneByHalf" press=".onTile"><customData><core:CustomData key="filter" value="Submitted"/></customData><tileContent><TileContent><content><NumericContent value="{ui>/summary/submitted}" withMargin="false" valueColor="Neutral"/></content></TileContent></tileContent></GenericTile>
+        <GenericTile header="{i18n>approvedCases}" subheader="{i18n>approvedHint}" frameType="OneByHalf" press=".onTile"><customData><core:CustomData key="filter" value="Approved"/></customData><tileContent><TileContent><content><NumericContent value="{ui>/summary/approved}" withMargin="false" valueColor="Good"/></content></TileContent></tileContent></GenericTile>
+      </FlexBox>
+      <Panel class="pf-section" accessibleRole="Region">
+        <headerToolbar><OverflowToolbar><Title id="caseListTitle" text="{i18n>cases}" level="H2"/><ToolbarSpacer/>
+          <Select id="statusFilter" selectedKey="all" change=".onFilter" tooltip="{i18n>filterStatus}"><items>
+            <core:Item key="all" text="{i18n>allCases}"/><core:Item key="urgent" text="{i18n>urgentCases}"/><core:Item key="Open" text="{i18n>openCases}"/><core:Item key="Submitted" text="{i18n>waitingCases}"/><core:Item key="Approved" text="{i18n>approvedCases}"/><core:Item key="Rejected" text="{i18n>rejectedCases}"/><core:Item key="Ordered" text="{i18n>orderedCases}"/>
+          </items></Select>
+          <SearchField id="search" width="18rem" search=".onSearch" placeholder="{i18n>search}" tooltip="{i18n>search}"/>
+          <OverflowToolbarButton icon="sap-icon://sort" text="{i18n>sortCases}" press=".onSortCases"
+            tooltip="{parts: ['ui>/sort/key', 'ui>/sort/descending'], formatter: '.sortDescription'}">
+            <layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+          </OverflowToolbarButton>
+        </OverflowToolbar></headerToolbar>
+        <Table id="cases" width="100%" growing="true" growingThreshold="6" sticky="ColumnHeaders" itemPress=".onCase" noDataText="{i18n>noCases}" ariaLabelledBy="caseListTitle"
+          items="{path: '/Cases', parameters: {$count: true, $select: 'ID,caseNumber,title,status,referenceDeliveryDate', $expand: 'demand($expand=material),statusInfo,selectedOffer($expand=supplier),transfer($expand=statusInfo)'}, sorter: {path: 'caseNumber'}, events: {dataReceived: '.onListData'}}">
+          <columns>
+            <Column width="30%" sortIndicator="{= (${ui>/sort/key} === 'caseNumber' || ${ui>/sort/key} === 'material') ? (${ui>/sort/descending} ? 'Descending' : 'Ascending') : 'None' }"><Text id="casesLabel" text="{i18n>materialCase}"/></Column>
+            <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" sortIndicator="{= (${ui>/sort/key} === 'quantity' || ${ui>/sort/key} === 'location') ? (${ui>/sort/descending} ? 'Descending' : 'Ascending') : 'None' }"><Text text="{i18n>demand}"/></Column>
+            <Column sortIndicator="{= (${ui>/sort/key} === 'requiredOn') ? (${ui>/sort/descending} ? 'Descending' : 'Ascending') : 'None' }"><Text text="{i18n>requiredOn}"/></Column>
+            <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" sortIndicator="{= (${ui>/sort/key} === 'referenceDelivery') ? (${ui>/sort/descending} ? 'Descending' : 'Ascending') : 'None' }"><Text text="{i18n>referenceDelivery}"/></Column>
+            <Column minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" sortIndicator="{= (${ui>/sort/key} === 'status') ? (${ui>/sort/descending} ? 'Descending' : 'Ascending') : 'None' }"><Text text="{i18n>status}"/></Column>
+            <Column minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" sortIndicator="{= (${ui>/sort/key} === 'selectedSupplier') ? (${ui>/sort/descending} ? 'Descending' : 'Ascending') : 'None' }"><Text text="{i18n>selectedSupplier}"/></Column>
+          </columns>
+          <items><ColumnListItem type="Navigation" vAlign="Middle"><cells>
+            <ObjectIdentifier title="{demand/material/name}" text="{caseNumber}"/>
+            <VBox><Text text="{demand/quantity} {demand/unit}"/><Text text="{demand/location}" class="pf-secondary"/></VBox>
+            <Text text="{path:'demand/requiredOn',targetType:'any',formatter:'.formatter.date'}"/>
+            <Text text="{path:'referenceDeliveryDate',targetType:'any',formatter:'.formatter.date'}"/>
+            <VBox><ObjectStatus text="{statusInfo/name}" state="{path:'status',formatter:'.formatter.status'}"/><ObjectStatus text="{transfer/statusInfo/name}" state="{path:'transfer/status',formatter:'.formatter.transferState'}" visible="{= !!${transfer/status} }"/></VBox>
+            <Text text="{= ${selectedOffer/supplier/name} || '–' }"/>
+          </cells></ColumnListItem></items>
+        </Table>
+        <Text text="{i18n>urgentDefinition}" class="pf-note sapUiSmallMarginTop"/>
+      </Panel>
+      <Panel id="comparisonSection" class="pf-section pf-comparison" visible="{= !!${ui>/selected} }" busy="{ui>/selectionBusy}" busyIndicatorDelay="0" accessibleRole="Region">
+        <headerToolbar><OverflowToolbar><Title text="{i18n>comparison}" level="H2"/><ToolbarSpacer/><Button text="{i18n>openDecision}" type="Emphasized" press=".openDecision" icon="sap-icon://navigation-right-arrow" enabled="{= !${ui>/selectionBusy} }"/></OverflowToolbar></headerToolbar>
+        <FlexBox wrap="Wrap" justifyContent="SpaceBetween" class="pf-case-heading">
+          <VBox><Title text="{ui>/selected/demand/material/name}" level="H3"/><Text text="{ui>/selected/caseNumber} · {ui>/selected/demand/location}"/></VBox>
+          <VBox><Label text="{i18n>requiredOn}"/><ObjectStatus text="{path:'ui>/selected/demand/requiredOn',formatter:'.formatter.date'}" icon="sap-icon://calendar"/></VBox>
+          <VBox><Label text="{i18n>quantity}"/><Text text="{ui>/selected/demand/quantity} {ui>/selected/demand/unit}"/></VBox>
+          <VBox><Label text="{i18n>referenceTotal}"/><ObjectNumber number="{path:'ui>/selected/referenceTotal',formatter:'.formatter.number'}" unit="{ui>/selected/referenceCurrency}"/></VBox>
+        </FlexBox>
+        <VBox class="pf-transfer sapUiSmallMarginBottom" visible="{= !!${ui>/selected/transfer} }">
+          <Title text="{i18n>transfer}" level="H4"/>
+          <ObjectStatus text="{ui>/selected/transfer/statusInfo/name}" state="{path:'ui>/selected/transfer/status',formatter:'.formatter.transferState'}"/>
+          <Text text="{ui>/selected/transfer/errorInfo/name}" visible="{= !!${ui>/selected/transfer/errorInfo/name} }"/>
+          <Text text="{i18n>transferAttempts}: {ui>/selected/transfer/attemptCount}"/>
+          <HBox wrap="Wrap" visible="{= !!${ui>/selected/transfer/nextAttemptAt} }"><Text text="{i18n>nextAttempt}: " class="sapUiTinyMarginEnd"/><Text text="{path:'ui>/selected/transfer/nextAttemptAt',formatter:'.formatter.timestamp'}"/></HBox>
+          <Text text="{i18n>orderNumber}: {ui>/selected/orderNumber}" visible="{= !!${ui>/selected/orderNumber} }"/>
+          <Text text="{i18n>transferHint}" class="pf-note"/>
+        </VBox>
+        <MessageStrip text="{i18n>selectionHint}" type="Information" showIcon="true" visible="{ui>/canPrepare}" class="sapUiSmallMarginBottom"/>
+        <grid:CSSGrid class="pf-offers" gridTemplateColumns="repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr))" gridAutoRows="1fr" gridGap="1rem" items="{path: 'ui>/comparison/offers', templateShareable: false}"><grid:items>
+          <Panel class="pf-offer"><headerToolbar><Toolbar><Title text="{ui>supplierName}" level="H4"/><ToolbarSpacer/><ObjectStatus text="{i18n>reference}" visible="{ui>isReference}"/></Toolbar></headerToolbar>
+            <VBox class="pf-offer-content">
+              <Text text="{ui>city}" class="pf-secondary"/>
+              <ObjectStatus text="{parts:['ui>delayDays','ui>available','ui>unavailableCode'], formatter:'.deliveryText'}" state="{parts:['ui>delayDays','ui>available'], formatter:'.deliveryState'}" class="sapUiSmallMarginTop"/>
+              <Label text="{i18n>totalCost}" class="sapUiSmallMarginTop"/>
+              <ObjectNumber number="{path:'ui>totalCost',formatter:'.formatter.number'}" unit="{ui>currency}" class="pf-total"/>
+              <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop"><Label text="{i18n>extraCost}"/><ObjectStatus text="{parts:['ui>extraCost','ui>currency'],formatter:'.formatter.money'}" state="{path:'ui>extraCost',formatter:'.formatter.costState'}"/></HBox>
+              <HBox justifyContent="SpaceBetween"><Label text="{i18n>unitPrice}"/><Text text="{parts:['ui>unitPrice','ui>currency'],formatter:'.formatter.money'}"/></HBox>
+              <HBox justifyContent="SpaceBetween"><Label text="{i18n>shipping}"/><Text text="{parts:['ui>shipping','ui>currency'],formatter:'.formatter.money'}"/></HBox>
+              <HBox justifyContent="SpaceBetween" class="sapUiSmallMarginTop"><Label text="{i18n>offeredDelivery}"/><Text text="{path:'ui>deliveryDate',formatter:'.formatter.date'}"/></HBox>
+              <HBox justifyContent="SpaceBetween"><Label text="{i18n>validUntil}"/><Text text="{path:'ui>validUntil',formatter:'.formatter.date'}"/></HBox>
+              <VBox justifyContent="End">
+                <layoutData><FlexItemData growFactor="1"/></layoutData>
+                <ObjectStatus text="{i18n>currentSelection}" state="Information" visible="{ui>isSelected}" class="sapUiTinyMarginTop"/>
+                <Button text="{i18n>chooseOffer}" tooltip="{ui>supplierName}: {i18n>chooseOffer}" width="100%" press=".onChoose" visible="{ui>/canPrepare}" enabled="{= ${ui>available} &amp;&amp; !${ui>/selectionBusy} }" class="sapUiSmallMarginTop"/>
+              </VBox>
+            </VBox>
+          </Panel>
+        </grid:items></grid:CSSGrid>
+        <IllustratedMessage illustrationType="sapIllus-NoSearchResults" title="{i18n>noOffers}" description="{i18n>noOffersHint}" visible="{= ${ui>/comparison/offers}.length === 0 }"/>
+        <Text text="{i18n>comparisonHint}" class="pf-note sapUiSmallMarginTop"/>
+      </Panel>
+      <Panel headerText="{i18n>schedule}" class="pf-section pf-calendar" visible="{= !!${ui>/selected} }" accessibleRole="Region">
+        <Text text="{i18n>scheduleHint}" class="pf-note sapUiSmallMarginBottom"/>
+        <PlanningCalendar id="schedule" width="100%" startDate="{ui>/calendarStart}" viewKey="TwoWeeks" builtInViews="Week,OneMonth" showRowHeaders="true" showWeekNumbers="true" showEmptyIntervalHeaders="false" singleSelection="true" rows="{ui>/calendarRows}">
+          <views><PlanningCalendarView key="TwoWeeks" description="{i18n>twoWeeks}" intervalType="Day" intervalsS="7" intervalsM="14" intervalsL="14"/></views>
+          <rows><PlanningCalendarRow title="{ui>title}" text="{ui>text}" appointments="{ui>appointments}"><appointments><unified:CalendarAppointment startDate="{ui>start}" endDate="{ui>end}" title="{ui>title}" type="{ui>type}" tooltip="{ui>tooltip}"/></appointments></PlanningCalendarRow></rows>
+        </PlanningCalendar>
+      </Panel>
+    </VBox></f:content>
+  </f:DynamicPage>
+</mvc:View>

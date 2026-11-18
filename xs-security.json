@@ -1,0 +1,21 @@
+{
+  "xsappname": "procurementflow",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    { "name": "$XSAPPNAME.Buyer", "description": "Prepare and submit procurement decisions" },
+    { "name": "$XSAPPNAME.Approver", "description": "Approve other users' submissions" },
+    { "name": "$XSAPPNAME.Reader", "description": "Read procurement cases" }
+  ],
+  "attributes": [],
+  "role-templates": [
+    { "name": "Buyer", "description": "Procurement buyer", "scope-references": ["$XSAPPNAME.Buyer"] },
+    { "name": "Approver", "description": "Procurement approver", "scope-references": ["$XSAPPNAME.Approver"] },
+    { "name": "Reader", "description": "Procurement reader", "scope-references": ["$XSAPPNAME.Reader"] }
+  ],
+  "role-collections": [
+    { "name": "ProcurementFlow_Buyer", "description": "Prepare and submit procurement decisions", "role-template-references": ["$XSAPPNAME.Buyer"] },
+    { "name": "ProcurementFlow_Approver", "description": "Approve other users' procurement submissions", "role-template-references": ["$XSAPPNAME.Approver"] },
+    { "name": "ProcurementFlow_Reader", "description": "Read procurement cases and decisions", "role-template-references": ["$XSAPPNAME.Reader"] }
+  ],
+  "oauth2-configuration": { "credential-types": ["binding-secret"] }
+}

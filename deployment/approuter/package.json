@@ -1,0 +1,16 @@
+{
+  "name": "procurementflow-approuter",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "npm@11.20.0",
+  "scripts": {
+    "start": "node start.cjs"
+  },
+  "dependencies": {
+    "@sap/approuter": "23.4.0"
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "procurementflow.decisions",
+    "type": "application",
+    "i18n": {
+      "bundleUrl": "i18n/i18n.properties",
+      "supportedLocales": [
+        "",
+        "en"
+      ],
+      "fallbackLocale": ""
+    },
+    "applicationVersion": {
+      "version": "0.1.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "dataSources": {
+      "mainService": {
+        "uri": "/procurement/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.154.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "procurementflow.decisions.i18n.i18n",
+          "supportedLocales": [
+            "",
+            "en"
+          ],
+          "fallbackLocale": ""
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true,
+          "synchronizationMode": "None"
+        }
+      }
+    },
+    "routing": {
+      "config": {},
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "DecisionsList",
+          "target": "DecisionsList"
+        },
+        {
+          "pattern": "DecisionWorkspaces({key}):?query:",
+          "name": "DecisionObjectPage",
+          "target": "DecisionObjectPage"
+        }
+      ],
+      "targets": {
+        "DecisionsList": {
+          "type": "Component",
+          "id": "DecisionsList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/DecisionWorkspaces",
+              "variantManagement": "None",
+              "initialLoad": "Enabled",
+              "navigation": {
+                "DecisionWorkspaces": {
+                  "detail": {
+                    "route": "DecisionObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "selectionMode": "None"
+                  },
+                  "columns": {
+                    "DataField::procurementCase::caseNumber": {
+                      "width": "10rem"
+                    },
+                    "DataField::procurementCase::title": {
+                      "width": "auto"
+                    },
+                    "DataField::procurementCase::status": {
+                      "width": "9rem"
+                    },
+                    "DataField::procurementCase::demand::requiredOn": {
+                      "width": "10rem"
+                    },
+                    "DataField::selectedOffer_ID": {
+                      "width": "14rem"
+                    },
+                    "DataField::procurementCase::totalCost": {
+                      "width": "12rem"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "DecisionObjectPage": {
+          "type": "Component",
+          "id": "DecisionObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/DecisionWorkspaces",
+              "editableHeaderContent": false,
+              "showRelatedApps": false,
+              "content": {
+                "header": {
+                  "actions": {
+                    "submit": {
+                      "text": "{i18n>submit}",
+                      "press": "procurementflow.decisions.ext.Actions.submit",
+                      "visible": "{= ${IsActiveEntity} && ${canSubmit} }",
+                      "enabled": "{= ${ui>/editMode} !== 'Editable' }",
+                      "requiresSelection": false
+                    },
+                    "withdraw": {
+                      "text": "{i18n>withdraw}",
+                      "press": "procurementflow.decisions.ext.Actions.withdraw",
+                      "visible": "{= ${IsActiveEntity} && ${canWithdraw} }",
+                      "enabled": "{= ${ui>/editMode} !== 'Editable' }",
+                      "requiresSelection": false
+                    },
+                    "reopen": {
+                      "text": "{i18n>reopen}",
+                      "press": "procurementflow.decisions.ext.Actions.reopen",
+                      "visible": "{= ${IsActiveEntity} && ${canReopen} }",
+                      "enabled": "{= ${ui>/editMode} !== 'Editable' }",
+                      "requiresSelection": false
+                    },
+                    "approve": {
+                      "text": "{i18n>approve}",
+                      "press": "procurementflow.decisions.ext.Actions.approve",
+                      "visible": "{= ${IsActiveEntity} && ${canApprove} }",
+                      "enabled": "{= ${ui>/editMode} !== 'Editable' }",
+                      "requiresSelection": false
+                    },
+                    "decline": {
+                      "text": "{i18n>decline}",
+                      "press": "procurementflow.decisions.ext.Actions.decline",
+                      "visible": "{= ${IsActiveEntity} && ${canDecline} }",
+                      "enabled": "{= ${ui>/editMode} !== 'Editable' }",
+                      "requiresSelection": false
+                    },
+                    "retryTransfer": {
+                      "text": "{i18n>retryTransfer}",
+                      "press": "procurementflow.decisions.ext.Actions.retryTransfer",
+                      "visible": "{= ${IsActiveEntity} && ${canRetryTransfer} }",
+                      "enabled": "{= ${ui>/editMode} !== 'Editable' }",
+                      "requiresSelection": false
+                    },
+                    "refreshTransfer": {
+                      "text": "{i18n>refreshTransfer}",
+                      "press": "procurementflow.decisions.ext.Actions.refresh",
+                      "visible": "{= ${IsActiveEntity} && !!${procurementCase/transfer_ID} }",
+                      "enabled": "{= ${ui>/editMode} !== 'Editable' }",
+                      "requiresSelection": false
+                    }
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "procurementCase/history/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "columns": {
+                    "DataField::event": {
+                      "width": "16rem"
+                    },
+                    "DataField::actor": {
+                      "width": "11rem"
+                    },
+                    "DataField::occurredAt": {
+                      "width": "14rem"
+                    },
+                    "DataField::reason": {
+                      "width": "auto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ObjectPage.ObjectPageController": {
+            "controllerName": "procurementflow.decisions.ext.ObjectPage"
+          }
+        }
+      }
+    },
+    "flexEnabled": false,
+    "flexBundle": false
+  }
+}

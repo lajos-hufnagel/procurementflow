@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProcurementFlow · KERNVADO Systems</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="/shared/kernvado-favicon.png">
+  <link rel="stylesheet" href="/shared/shell.css">
+  <script id="sap-ui-bootstrap"
+    src="https://ui5.sap.com/1.154.0/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-language="de"
+    data-sap-ui-xx-component-preload="off"
+    data-sap-ui-flexibility-services='[]'
+    data-sap-ui-async="true"
+    data-sap-ui-compat-version="edge"
+    data-sap-ui-resource-roots='{"procurementflow.cockpit":"./","procurementflow.shared":"/shared"}'
+    data-sap-ui-on-init="module:procurementflow/cockpit/bootstrap"></script>
+</head>
+<body data-component="procurementflow.cockpit" class="sapUiBody sapUiSizeCompact">
+  <header class="pf-shell">
+    <a href="/cockpit/webapp/index.html" class="pf-brand" aria-label="ProcurementFlow Start"><img src="/shared/kernvado-systems.png" alt="KERNVADO Systems"></a>
+    <span class="pf-divider" aria-hidden="true"></span>
+    <span class="pf-app-name">ProcurementFlow</span>
+    <nav class="pf-nav" aria-label="Navigation"><a id="nav-cockpit" href="/cockpit/webapp/index.html" aria-current="page">Cockpit</a><a id="nav-decisions" href="/decisions/webapp/index.html">Entscheidungen</a></nav>
+    <div class="pf-shell-tools">
+      <span id="demo-label" class="pf-demo" hidden>Lokale Demo</span>
+      <label id="user-label" class="pf-control" hidden><span id="user-caption">Identität</span><select id="demo-user" aria-label="Demo-Identität"><option value="buyer">Einkauf · buyer</option><option value="approver">Freigabe · approver</option><option value="reader">Lesen · reader</option><option value="dual">Beide Rollen · dual</option></select></label>
+      <button id="demo-reset" class="pf-reset" type="button" hidden>Demo neu starten</button>
+      <label class="pf-control"><span id="language-caption">Sprache</span><select id="language" aria-label="Sprache"><option value="de">Deutsch</option><option value="en">English</option></select></label>
+    </div>
+  </header>
+  <div class="pf-demo-bar">
+    <p id="demo-data-note" class="pf-data-note">Demo-Daten: Alle Firmen und Angebote sind fiktiv.</p>
+    <label id="scenario-label" class="pf-control" hidden><span id="scenario-caption">Demo-Szenario</span><select id="demo-scenario" aria-label="Demo-Szenario"><option value="normal">Normalbetrieb</option><option value="erp-outage">ERP-Ausfall simulieren</option></select></label>
+  </div>
+  <div id="demo-scenario-note" class="pf-scenario-note" role="status" hidden><span id="demo-scenario-message"></span><button id="demo-scenario-stop" class="pf-reset" type="button">Simulation beenden</button></div>
+  <main id="content" aria-label="Beschaffungsfälle"><p id="startup-message" role="status">Beschaffungsfälle werden geladen …</p></main>
+</body>
+</html>

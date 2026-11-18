@@ -1,0 +1,13 @@
+/* Headerless value-help tables already have the popover frame around them.
+   Keep inner row separators and keyboard focus, without duplicate edge borders. */
+.sapMdcValueHelpPopover .sapMdcValueHelpMTable
+.sapMListTbl:has(> .sapMTableTHead > .sapMListTblHeaderNone)
+> .sapMTableTBody > .sapMListTblRow:first-child > td {
+  border-top: 0;
+}
+
+.sapMdcValueHelpPopover .sapMdcValueHelpMTable
+.sapMListTbl:has(> .sapMTableTHead > .sapMListTblHeaderNone)
+> .sapMTableTBody > tr:last-child > td {
+  border-bottom: 0;
+}

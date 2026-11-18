@@ -1,0 +1,6 @@
+locale,code,name
+en,Pending,Transfer pending
+en,Processing,Transferring
+en,Retry,Retry scheduled
+en,Succeeded,Order confirmed
+en,Failed,Transfer failed

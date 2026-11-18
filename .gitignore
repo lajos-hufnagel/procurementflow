@@ -1,0 +1,68 @@
+# Lokale Betriebssystemdateien
+.DS_Store
+._*
+Thumbs.db
+
+# Abhängigkeiten, Build-Ergebnisse und Testberichte
+node_modules/
+gen/
+dist/
+coverage/
+test-results/
+playwright-report/
+mta_archives/
+*.mtar
+*.log
+*.tsbuildinfo
+
+# Lokale Konfiguration und Service-Bindings
+.env
+.env.*
+!.env.example
+!.env.*.example
+default-env.json
+.cdsrc-private.json
+
+# Lokale Datenbanken einschließlich Journaldateien
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+
+# Terraform-Zustand, Pläne und lokale Variablen
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.tfvars.json
+.terraform.tfstate.lock.info
+crash.log
+crash.*.log
+
+# Lockdateien und bereinigte Konfigurationsbeispiele bleiben versionierbar.
+
+# Lokaler Laufzeitzustand und erzeugte CAP-Typen
+/.local/
+/@cds-models/
+/_out/
+
+# Eigenständiger ERP-Testdienst
+/erp/.local/
+/erp/@cds-models/
+
+
+# Persönliche Cloud-Zugänge und lokale Deployment-Erweiterungen
+.cf/
+cf-home/
+*.pem
+*.key
+*.p12
+*.pfx
+*.mtaext
+!deployment/btp/public-demo.mtaext
+
+# Terraform-Beispiele enthalten ausschließlich Platzhalter.
+!*.tfvars.example

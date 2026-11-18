@@ -1,0 +1,16 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog id="prepareDialog" title="{i18n>prepareTitle}" contentWidth="34rem" draggable="true" busy="{ui>/saving}" busyIndicatorDelay="0">
+    <content><VBox class="sapUiMediumMargin">
+      <ObjectIdentifier title="{ui>/draft/offer/supplierName}" text="{ui>/selected/caseNumber}"/>
+      <ObjectNumber number="{path:'ui>/draft/offer/totalCost',formatter:'.formatter.number'}" unit="{ui>/draft/offer/currency}" class="sapUiSmallMarginTop"/>
+      <Text text="{i18n>prepareHint}" class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
+      <Label text="{i18n>reason}" labelFor="reason" required="true"/>
+      <TextArea id="reason" value="{ui>/draft/reason}" valueLiveUpdate="true" maxLength="2000" rows="3" width="100%"/>
+      <Label text="{i18n>extraReason}" labelFor="extraReason" required="{ui>/draft/offer/needsExtraReason}" class="sapUiSmallMarginTop"/>
+      <TextArea id="extraReason" value="{ui>/draft/extraCostReason}" valueLiveUpdate="true" maxLength="2000" rows="3" width="100%"/>
+      <Text text="{i18n>thresholdHint}" class="pf-note sapUiTinyMarginTop"/>
+    </VBox></content>
+    <beginButton><Button text="{i18n>saveAndOpen}" type="Emphasized" press=".onSave" enabled="{= !${ui>/saving} }"/></beginButton>
+    <endButton><Button text="{i18n>cancel}" press=".onCancel" enabled="{= !${ui>/saving} }"/></endButton>
+  </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,8 @@
+{
+  "_schema-version": "3.3.0",
+  "ID": "procurementflow-trial",
+  "extends": "procurementflow",
+  "parameters": {
+    "hana-database-id": "REPLACE_WITH_EXISTING_HANA_GUID"
+  }
+}

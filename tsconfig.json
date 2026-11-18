@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "gen/srv",
+    "rootDir": ".",
+    "sourceMap": true,
+    "types": [
+      "node",
+      "@cap-js/cds-types"
+    ],
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true
+  },
+  "include": [
+    "srv/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "gen",
+    "app"
+  ]
+}

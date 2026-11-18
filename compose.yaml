@@ -1,0 +1,42 @@
+name: procurementflow
+services:
+  erp:
+    image: ${COMPOSE_PROJECT_NAME:-procurementflow}-erp:local
+    build:
+      context: .
+      target: erp
+    init: true
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${ERP_PORT:-4005}:4005"
+    volumes:
+      - erp-data:/opt/procurementflow/.local
+    environment:
+      NODE_ENV: development
+      PORT: "4005"
+    stop_grace_period: 15s
+  cap:
+    image: ${COMPOSE_PROJECT_NAME:-procurementflow}-cap:local
+    build:
+      context: .
+      target: cap
+    init: true
+    restart: unless-stopped
+    depends_on:
+      erp:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${APP_PORT:-4004}:4004"
+    volumes:
+      - procurement-data:/opt/procurementflow/.local
+    environment:
+      NODE_ENV: development
+      PORT: "4004"
+      ERP_WORKER_ENABLED: "true"
+      ERP_BASE_URL: http://erp:4005
+      ERP_USER: integration
+      ERP_PASSWORD: demo-integration
+    stop_grace_period: 15s
+volumes:
+  procurement-data:
+  erp-data:

@@ -1,0 +1,16 @@
+locale;code;name
+en;ERP_UNAVAILABLE;ERP simulator temporarily unavailable.
+en;ERP_CONNECTION;Connection to the ERP simulator interrupted.
+en;ERP_TIMEOUT;The ERP simulator did not respond in time.
+en;ERP_AUTH;The technical ERP credentials were rejected.
+en;ERP_CONFLICT;The ERP order conflicts with the stored conditions.
+en;ERP_REJECTED;The ERP simulator rejected the request.
+en;INVALID_CONFIRMATION;The ERP confirmation does not match this request.
+en;PAYLOAD_CORRUPTED;The stored order data is inconsistent.
+en;CASE_CHANGED;The approved case no longer matches this transfer.
+en;LEASE_EXPIRED;A previous attempt did not finish.
+en;INTERNAL_TRANSFER_ERROR;The transfer could not be finalized.
+en;ERP_DESTINATION_MISSING;The configured ERP destination was not found.
+en;ERP_DESTINATION_INVALID;The configured ERP destination has an invalid address.
+en;ERP_DESTINATION_UNAVAILABLE;The configured ERP destination could not be resolved.
+en;ERP_DEMO_OUTAGE;Demo simulation: ERP unavailable.
